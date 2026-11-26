@@ -1,0 +1,1046 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Duyuru Takip</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: masthead + tab strip, then one column of notice rows; priority rows get a marker ring. */
+:root{
+  --bg:#f3f5f6; --surface:#ffffff; --ink:#15212b; --muted:#5d6b76; --line:#dde3e7;
+  --accent:#0f5e6e; --accent-soft:#e1eff1;
+  --pri:#d98a00; --pri-soft:#fff3db; --pri-ink:#7a4b00;
+  --ok:#2f7d4f; --warn:#b4471f;
+  --cal:#1a6fa3; --cal-soft:#e3f0f9; --rd:#2f7d4f; --rd-soft:#e4f3ea; --ar:#6b4fa0; --ar-soft:#efe9f8;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1519; --surface:#172027; --ink:#e6edf1; --muted:#97a6b1; --line:#2a3640;
+  --accent:#5fb7c6; --accent-soft:#16323a;
+  --pri:#f0a92a; --pri-soft:#33260d; --pri-ink:#ffd58a;
+  --ok:#6cc391; --warn:#ef8b63;
+  --cal:#7cbbe6; --cal-soft:#16293a; --rd:#6cc391; --rd-soft:#163023; --ar:#b9a0e6; --ar-soft:#2a2140; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0f1519; --surface:#172027; --ink:#e6edf1; --muted:#97a6b1; --line:#2a3640;
+  --accent:#5fb7c6; --accent-soft:#16323a;
+  --pri:#f0a92a; --pri-soft:#33260d; --pri-ink:#ffd58a;
+  --ok:#6cc391; --warn:#ef8b63;
+  --cal:#7cbbe6; --cal-soft:#16293a; --rd:#6cc391; --rd-soft:#163023; --ar:#b9a0e6; --ar-soft:#2a2140; color-scheme:dark;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:flex;flex-direction:column;gap:18px}
+header.mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px}
+h1{font-family:var(--f-display);font-size:1.9rem;line-height:1.05;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);font-size:.85rem;font-family:var(--f-mono)}
+.sum{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font-size:.8rem;padding:4px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);white-space:nowrap}
+.pill.pri{background:var(--pri-soft);border-color:var(--pri);color:var(--pri-ink);font-weight:600}
+nav.tabs{display:flex;flex-wrap:wrap;gap:2px 4px;border-bottom:1px solid var(--line)}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{appearance:none;background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px 9px;font:600 .92rem var(--f-body);color:var(--muted);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.tab .n{font:500 .72rem var(--f-mono);background:var(--pri);color:#1b1200;border-radius:999px;padding:1px 6px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{appearance:none;border:0;background:none;padding:6px 12px;font:500 .85rem var(--f-body);color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:.88rem;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--pri);width:16px;height:16px}
+ul.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+li.row{display:grid;grid-template-columns:86px 1fr;gap:4px 14px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+li.row .d{font:500 .8rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+li.row .b{min-width:0;display:flex;flex-direction:column;gap:5px}
+li.row a.t{color:var(--ink);text-decoration:none;font-weight:500;overflow-wrap:anywhere}
+li.row a.t:hover{text-decoration:underline;text-decoration-color:var(--accent)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.src{font-size:.75rem;color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:1px 7px}
+.kw{font-size:.72rem;color:var(--pri-ink);background:var(--pri-soft);border:1px solid var(--pri);border-radius:999px;padding:0 7px}
+.new{font:600 .68rem var(--f-mono);letter-spacing:.06em;color:var(--accent)}
+li.row.prio{border:2px solid var(--pri);box-shadow:0 0 0 4px var(--pri-soft);background:linear-gradient(var(--surface),var(--surface))}
+li.row.prio a.t{font-weight:600}
+.flag{font:700 .68rem var(--f-mono);letter-spacing:.08em;color:var(--pri-ink);text-transform:uppercase}
+.empty{padding:22px 16px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:10px}
+section.side{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.tab{padding:8px 9px 7px;font-size:.86rem}section.side{grid-template-columns:1fr} li.row{grid-template-columns:1fr} li.row .d{padding:0}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel h2{font:600 .78rem var(--f-body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0}
+.srcs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:.88rem}
+.srcs li{display:flex;gap:8px;align-items:baseline;justify-content:space-between}
+.srcs a{color:var(--ink);overflow-wrap:anywhere}
+.st{font:500 .74rem var(--f-mono);white-space:nowrap}
+.st.ok{color:var(--ok)} .st.bad{color:var(--warn)} .st.na{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:.82rem;border:1px solid var(--pri);background:var(--pri-soft);color:var(--pri-ink);border-radius:999px;padding:2px 4px 2px 10px}
+.chip button{appearance:none;border:0;background:none;color:inherit;cursor:pointer;font-size:1rem;line-height:1;padding:0 4px}
+form.add{display:flex;gap:6px}
+form.add input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:7px 10px;font:inherit}
+form.add button{appearance:none;border:0;background:var(--accent);color:var(--surface);border-radius:8px;padding:7px 14px;font:600 .88rem var(--f-body);cursor:pointer}
+.note{font-size:.8rem;color:var(--muted)}
+.tab svg{width:18px;height:18px;flex:none;color:var(--accent);opacity:.75}
+.tab[aria-selected="true"] svg{opacity:1}
+.calbtn{appearance:none;border:1px solid var(--line);background:none;color:var(--muted);border-radius:6px;padding:1px 8px;font:500 .75rem var(--f-body);cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-left:auto}
+.calbtn svg{width:13px;height:13px}
+.calbtn:hover{color:var(--accent);border-color:var(--accent)}
+.calbtn.done{color:var(--ok);border-color:var(--ok)}
+.calpanel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--line);font-size:.85rem}
+.calpanel input[type=date],.calpanel input[type=time]{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:4px 6px;font:inherit}
+.calpanel button.go{appearance:none;border:0;background:var(--accent);color:var(--surface);border-radius:6px;padding:5px 12px;font:600 .82rem var(--f-body);cursor:pointer}
+.calpanel button.go[disabled]{opacity:.6;cursor:default}
+.calpanel .msg{flex-basis:100%;font-size:.8rem;color:var(--muted)}
+.calpanel .msg.err{color:var(--warn)} .calpanel .msg.ok{color:var(--ok)}
+.calpanel a{color:var(--accent)}
+.search{flex:1 1 220px;min-width:0;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit}
+.tools{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+li.row.read{background:transparent}
+li.row.read a.t{color:var(--muted);font-weight:400}
+li.row.read .src,li.row.read .kw{opacity:.7}
+.acts{display:flex;gap:6px;margin-left:auto}
+.mini{appearance:none;border:1px solid var(--line);background:none;color:var(--muted);border-radius:6px;padding:1px 8px;font:500 .75rem var(--f-body);cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.mini:hover{color:var(--accent);border-color:var(--accent)}
+.mini svg{width:13px;height:13px}
+.calbtn{margin-left:0}
+.mini.calbtn{color:var(--cal);background:var(--cal-soft);border-color:var(--cal)}
+.mini.calbtn.done{color:var(--surface);background:var(--cal)}
+.mini.rdbtn{color:var(--rd);background:var(--rd-soft);border-color:var(--rd)}
+.mini.rdbtn.on{color:var(--surface);background:var(--rd)}
+.mini.arbtn{color:var(--ar);background:var(--ar-soft);border-color:var(--ar)}
+.mini.arbtn.on{color:var(--surface);background:var(--ar)}
+.mini.calbtn:hover,.mini.rdbtn:hover,.mini.arbtn:hover{filter:brightness(1.08)}
+.kdate{font:600 .74rem var(--f-mono);color:var(--ink);background:var(--accent-soft);border:1px solid var(--accent);border-radius:4px;padding:0 6px}
+.tabname{font-size:.72rem;color:var(--muted)}
+.mastr{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.refresh{appearance:none;border:1px solid var(--accent);background:var(--accent);color:var(--surface);border-radius:8px;padding:6px 14px;font:600 .88rem var(--f-body);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.refresh svg{width:15px;height:15px}
+.refresh[disabled]{opacity:.65;cursor:default}
+.refresh.busy svg{animation:spin 1.1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.refresh.busy svg{animation:none}}
+.rmsg{font-size:.78rem;color:var(--muted);text-align:right;max-width:320px}
+.oalert{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.oalert a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:var(--pri-soft);border:2px solid var(--pri);color:var(--pri-ink);border-radius:10px;padding:6px 12px;font:600 .86rem var(--f-body);box-shadow:0 0 0 3px var(--pri-soft)}
+.oalert a:hover{filter:brightness(1.05)}
+.oalert a b{font:700 .78rem var(--f-mono);background:var(--pri);color:#1b1200;border-radius:999px;padding:1px 8px;white-space:nowrap}
+.oalert a svg{width:16px;height:16px;flex:none}
+@media (max-width:640px){.oalert{align-items:flex-start}}
+.rmsg.err{color:var(--warn)} .rmsg.ok{color:var(--ok)}
+@media (max-width:640px){.mastr{align-items:flex-start}.rmsg{text-align:left}}
+@media (prefers-reduced-motion:no-preference){li.row{transition:border-color .15s}}
+#tayinView{display:flex;flex-direction:column;gap:12px}
+.tyhead{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between}
+.tyhead h2{font-family:var(--f-display);font-size:1.35rem;margin:0}
+.tycards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.tycard{background:var(--surface);border:2px solid var(--pri);box-shadow:0 0 0 4px var(--pri-soft);border-radius:10px;padding:12px 14px}
+.tycard .il{font:600 .78rem var(--f-body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.tycard .gr{font-family:var(--f-display);font-size:1.5rem;line-height:1.1}
+.tycard .ch{font-size:.82rem;color:var(--muted)}
+.tycard .ch.up{color:var(--warn);font-weight:600}
+.tylinks{display:flex;flex-wrap:wrap;gap:8px}
+.tylinks a{font:600 .85rem var(--f-body);color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);border-radius:8px;padding:5px 12px;text-decoration:none}
+.tywrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table.ty{border-collapse:collapse;width:100%;font-size:.86rem;min-width:620px}
+table.ty th,table.ty td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+table.ty th{font:600 .78rem var(--f-body);color:var(--muted);background:var(--bg);text-transform:uppercase;letter-spacing:.05em}
+table.ty td.rg{font:600 .85rem var(--f-mono);white-space:nowrap}
+table.ty .c{display:inline-block;margin:1px 4px 1px 0;padding:0 5px;border-radius:4px}
+table.ty .c.hl{background:var(--pri-soft);border:1px solid var(--pri);color:var(--pri-ink);font-weight:700}
+table.ty .c.st::after{content:"*";color:var(--warn)}
+.tyhist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:.88rem}
+.tyhist li{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.tychg{background:var(--pri-soft);border:1px solid var(--pri);border-radius:10px;padding:10px 14px;font-size:.88rem}
+:root{--grid:#a3b1bc}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--grid:#4d5e6b}}
+:root[data-theme="dark"]{--grid:#4d5e6b}
+.tywrap{border:1.5px solid var(--grid)}
+table.ty th,table.ty td{border:1px solid var(--grid)}
+table.ty thead th{border-bottom:2px solid var(--grid)}
+table.ty tr>*:first-child{border-left:0} table.ty tr>*:last-child{border-right:0}
+table.ty thead tr:first-child>*{border-top:0} table.ty tbody tr:last-child>*{border-bottom:0}
+table.ty tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--bg) 60%,var(--surface))}
+.subtabs{display:flex;gap:6px;flex-wrap:wrap}
+.stab{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 14px;font:600 .86rem var(--f-body);cursor:pointer}
+.stab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.tybar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.tysec{font:600 .78rem var(--f-body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:4px 0 0}
+.tmsg{font-size:.85rem;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface)}
+.tmsg.ok{color:var(--ok);border-color:var(--ok)} .tmsg.err{color:var(--warn);border-color:var(--warn)}
+.tmsg a{color:var(--accent)}
+ul.upc{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+ul.upc li{display:grid;grid-template-columns:minmax(150px,auto) 1fr auto;gap:4px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--pri);border-radius:8px;padding:8px 12px}
+ul.upc .ud{font:600 .8rem var(--f-mono);font-variant-numeric:tabular-nums}
+ul.upc .ub{display:flex;flex-direction:column;min-width:0}
+ul.upc .un{font-size:.8rem;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tdon{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.tdon.open{border:2px solid var(--pri);box-shadow:0 0 0 4px var(--pri-soft)}
+.tdh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.tdh h3{margin:0;font:600 1rem var(--f-body);flex:1 1 220px}
+.tur{font:600 .7rem var(--f-mono);border-radius:4px;padding:1px 7px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.tur.ildisi{background:var(--ar-soft);color:var(--ar);border:1px solid var(--ar)}
+.tur.yurtdisi{background:var(--rd-soft);color:var(--rd);border:1px solid var(--rd)}
+.dst.kapandi{border-color:var(--muted)}
+.tur.ilici{background:var(--cal-soft);color:var(--cal);border:1px solid var(--cal)}
+.dst{font-size:.75rem;border-radius:999px;padding:1px 9px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.dst.acik{border-color:var(--pri);background:var(--pri-soft);color:var(--pri-ink);font-weight:600}
+.dst.beklenen,.dst.yakinda{border-color:var(--accent);color:var(--accent)}
+.tswrap{overflow-x:auto;border:1.5px solid var(--grid);border-radius:8px}
+table.ts{border-collapse:collapse;width:100%;font-size:.86rem}
+table.ts td{border:1px solid var(--grid);padding:6px 9px;vertical-align:middle}
+table.ts tr>td:first-child{border-left:0} table.ts tr>td:last-child{border-right:0}
+table.ts tr:first-child>td{border-top:0} table.ts tr:last-child>td{border-bottom:0}
+table.ts td.dt{font:500 .8rem var(--f-mono);white-space:nowrap;width:1%;font-variant-numeric:tabular-nums}
+table.ts td.ac{width:1%;white-space:nowrap;text-align:right}
+table.ts tr.past td{color:var(--muted)}
+table.ts tr.next td{background:var(--pri-soft)}
+a.mini{text-decoration:none}
+#subnav{margin-top:-6px}
+.oyv{display:flex;flex-direction:column;gap:12px}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:7px;min-width:0}
+.gcard.steam{border-top-color:#2a6fb0}.gcard.epic{border-top-color:var(--ink)}.gcard.gog{border-top-color:#8a3ab9}.gcard.diger{border-top-color:var(--pri)}
+.gcard.deneme{opacity:.85;border-style:dashed}
+.gcard.alindi{opacity:.7}
+.gok{font:600 .74rem var(--f-body);color:var(--ok)}
+.gtop{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gplat{font:600 .72rem var(--f-mono);border-radius:4px;padding:1px 7px;background:var(--accent-soft);color:var(--accent)}
+.gkind{font-size:.75rem;color:var(--muted)}
+.gworth{margin-left:auto;font:500 .78rem var(--f-mono);color:var(--muted);text-decoration:line-through}
+a.gtitle{font:600 1.02rem var(--f-body);color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
+a.gtitle:hover{text-decoration:underline}
+.gwhen{font:500 .8rem var(--f-mono);color:var(--muted)}
+.gwhen.urgent{color:var(--warn);font-weight:600}
+.gacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:4px}
+a.gget{font:600 .82rem var(--f-body);background:var(--accent);color:var(--surface);border-radius:6px;padding:4px 12px;text-decoration:none}
+.tsrc{font-size:.8rem;color:var(--accent);overflow-wrap:anywhere}
+@media (max-width:640px){ul.upc li{grid-template-columns:1fr}ul.upc li>.mini{justify-self:start}table.ts td.dt{white-space:normal;width:auto}}
+.gbtn{appearance:none;border:1px solid var(--accent);background:var(--accent-soft);color:var(--ink);border-radius:6px;padding:1px 8px;font:600 .75rem var(--f-body);cursor:pointer}
+.gpanel{margin-top:8px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);display:flex;flex-direction:column;gap:8px}
+.gpanel .gnote{font-size:.85rem;color:var(--ink)}
+.gpanel .gimgs{display:flex;flex-wrap:wrap;gap:8px}
+.gpanel img{max-width:min(100%,420px);max-height:420px;border-radius:6px;border:1px solid var(--line);cursor:zoom-in;background:#fff}
+.gpanel .gmsg{font-size:.8rem;color:var(--muted)}
+.gov{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:99;cursor:zoom-out;padding:12px}
+.gov img{max-width:100%;max-height:100%;border-radius:4px;background:#fff}
+.tabupd{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:6px 10px;margin:8px 0 2px}
+.tudate{font:500 .8rem var(--f-mono);color:var(--muted)}
+.tumsg{font-size:.78rem;color:var(--muted)} .tumsg.err{color:var(--warn)} .tumsg.ok{color:var(--ok)}
+.tubtn{padding:4px 11px;font-size:.82rem}
+@media (max-width:640px){.tabupd{justify-content:flex-start}}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <h1>Duyuru Takip</h1>
+      <div class="sub" id="upd">Son kontrol: bekleniyor</div>
+    </div>
+    <div class="mastr">
+      <div class="oalert" id="oalert" role="status" aria-live="polite" hidden></div>
+      <button type="button" class="refresh" id="refresh" hidden>Tümünü yenile</button>
+      <div class="sum" id="sum"></div>
+      <div class="rmsg" id="rmsg" role="status" aria-live="polite"></div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Kategoriler"></nav>
+
+  <div class="tabupd" id="tabupd" aria-label="Bu sayfanın güncelleme durumu"></div>
+
+  <nav class="subtabs" id="subnav" hidden aria-label="Alt sayfalar"></nav>
+  <section id="tayinView" hidden aria-label="Tayin"></section>
+  <section id="oyunView" class="oyv" hidden aria-label="Ücretsiz oyunlar"></section>
+  <section id="izleView" class="oyv" hidden aria-label="İzlenmesi gerekenler"></section>
+  <section id="osymView" class="oyv" hidden aria-label="ÖSYM takvim"></section>
+
+  <div class="bar" id="bar">
+    <div class="seg" role="group" aria-label="Zaman aralığı">
+      <button type="button" id="r7" aria-pressed="true">Son 7 gün</button>
+      <button type="button" id="r30" aria-pressed="false">Son 30 gün</button>
+    </div>
+    <input class="search" id="q" type="search" placeholder="Tüm sekmelerde ara" aria-label="Duyurularda ara" autocomplete="off">
+    <div class="tools">
+      <label class="chk"><input type="checkbox" id="onlyPri"> Sadece öncelikliler</label>
+      <label class="chk"><input type="checkbox" id="hideRead"> Okunanları gizle</label>
+      <label class="chk"><input type="checkbox" id="showArch"> Arşivi göster</label>
+    </div>
+  </div>
+
+  <ul class="list" id="list"><li class="empty">Duyurular yükleniyor…</li></ul>
+
+  <section class="side" id="side">
+    <div class="panel">
+      <h2>Öncelik kelimeleri</h2>
+      <div class="chips" id="kwChips"></div>
+      <form class="add" id="kwForm">
+        <input id="kwInput" type="text" placeholder="Kelime ekle (ör. aday hakem)" autocomplete="off">
+        <button type="submit">Ekle</button>
+      </form>
+      <p class="note" id="kwNote">Bu sekmede başlığında bu kelimelerden biri geçen duyurular çerçeveyle işaretlenir ve günlük kontrolde telefonunuza bildirim gider.</p>
+    </div>
+    <div class="panel">
+      <h2>Kaynaklar</h2>
+      <ul class="srcs" id="srcs"></ul>
+      <p class="note">Her sabah otomatik kontrol edilir.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+const SVG=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';
+const ICONS={
+  spor:SVG('<path d="M3 11h9a5 5 0 1 1-5 5"/><path d="M12 11V8h7v4"/><circle cx="12" cy="16" r="1.4" fill="currentColor"/>'),
+  barolar:SVG('<path d="M12 4v16M7 20h10M5 7h14"/><path d="M5 7l-3 6a3 3 0 0 0 6 0z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0z"/>'),
+  universite:SVG('<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/><path d="M22 9v6"/>'),
+  saglik:SVG('<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/>'),
+  adalet:SVG('<path d="M14 4l6 6M11 7l6 6M12.5 5.5l-4 4M18.5 11.5l-4 4"/><path d="M11 12l-7 7"/><path d="M3 21h9"/>'),
+  bilirkisi:SVG('<path d="M12 4v16M7 20h10M5 7h14"/><path d="M5 7l-3 6a3 3 0 0 0 6 0z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0z"/>'),
+  oyun:SVG('<rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="15.5" cy="11.5" r="1" fill="currentColor"/><circle cx="18" cy="13.8" r="1" fill="currentColor"/>'),
+  tayin:SVG('<path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/>'),
+  izle:SVG('<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor"/>'),
+  toki:SVG('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>'),
+  onual:SVG('<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>'),
+  osym:SVG('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13l2 2 4-4"/>')
+};
+const CAL_ICON=SVG('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>');
+const TABS=[
+  {id:"spor",label:"Spor Federasyonları"},
+  {id:"bilirkisi",label:"Bilirkişi"},
+  {id:"universite",label:"Üniversite"},
+  {id:"saglik",label:"Sağlık Bakanlığı"},
+  {id:"tayin",label:"Tayin"},
+  {id:"toki",label:"TOKİ"},
+  {id:"osym",label:"ÖSYM Takvim"},
+  {id:"oyun",label:"Ücretsiz Oyun"},
+];
+const GROUPS={bilirkisi:[{id:"adalet",label:"Adalet · Bilirkişilik"},{id:"barolar",label:"Barolar"}]};
+const SUBLABEL={adalet:"Bilirkişi · Adalet",barolar:"Bilirkişi · Barolar"};
+function dtab(){const g=GROUPS[S.tab];return g?(S.sub[S.tab]||g[0].id):S.tab}
+function uiTab(t){for(const k in GROUPS)if(GROUPS[k].some(x=>x.id===t))return k;return t}
+const SOURCES={
+  spor:[
+    {id:"tvf",name:"Voleybol (TVF)",url:"https://tvf.org.tr/icerikler/tvf-duyurular"},
+    {id:"tvf-mhgk",name:"Voleybol hakem (MHGK)",url:"https://tvf.org.tr/icerikler/mhgk-duyurular/"},
+    {id:"badminton",name:"Badminton (TBF)",url:"https://www.badminton.org.tr/duyurular/"},
+    {id:"tyf",name:"Yüzme (TYF)",url:"https://www.tyf.gov.tr/haberler/"},
+    {id:"tyf-hakem",name:"Yüzme hakem kursları",url:"https://www.tyf.gov.tr/hakem-islemleri/kurslar.html"},
+    {id:"tmtf",name:"Masa Tenisi (TMTF)",url:"https://tmtf.gov.tr/duyurular"},
+    {id:"taf",name:"Atletizm (TAF + hakem duyuruları)",url:"https://taf.org.tr/category/duyuru"},
+    {id:"bilardo-mhk",name:"Bilardo hakem kurulu (MHK)",url:"https://mhk.bilardo.gov.tr/"},
+    {id:"bilardo",name:"Bilardo",url:"https://www.bilardo.org.tr/duyurular.html"},
+    {id:"ordu-gsim",name:"Ordu Gençlik ve Spor İl Müd.",url:"https://ordu.gsb.gov.tr/"}
+  ],
+  barolar:[
+    {id:"giresun-baro",name:"Giresun Barosu",url:"https://www.giresunbarosu.org.tr/Haberler"},
+    {id:"ordu-baro",name:"Ordu Barosu",url:"https://www.ordubarosu.org.tr/TumHaberler"}
+  ],
+  universite:[{id:"giresun-sbe",name:"Giresun Üni. Sosyal Bilimler Enst.",url:"https://sbe.giresun.edu.tr/tr/news"}],
+  saglik:[{id:"yhgm",name:"Yönetim Hizmetleri Genel Müd.",url:"https://yhgm.saglik.gov.tr/TR-10084/duyurular.html"},
+    {id:"giresun-ism",name:"Giresun İl Sağlık Müd.",url:"https://giresunism.saglik.gov.tr/TR-22137/duyurular.html"},
+    {id:"sgb",name:"Strateji Geliştirme Bşk.",url:"https://sgb.saglik.gov.tr/TR-59029/duyurular.html"},
+    {id:"sbsgm",name:"Sağlık Bilgi Sistemleri GM (SBSGM)",url:"https://sbsgm.saglik.gov.tr/TR-1283/duyurular.html"},
+    {id:"khgm",name:"Kamu Hastaneleri GM (KHGM)",url:"https://khgm.saglik.gov.tr/TR-39978/duyurular.html"}],
+  adalet:[{id:"bilirkisi",name:"Bilirkişilik Daire Başkanlığı",url:"https://bilirkisilik.adalet.gov.tr/Home/TumHaberler/1"},
+    {id:"trabzon-bbk",name:"Trabzon Bilirkişilik Bölge Kurulu (Giresun)",url:"https://trabzonbbk.adalet.gov.tr/Arsiv/duyuru"},
+    {id:"samsun-bbk",name:"Samsun Bilirkişilik Bölge Kurulu (Ordu)",url:"https://samsunbbk.adalet.gov.tr/Arsiv/duyuru"},
+    {id:"bilirkisi-egitim",name:"Temel eğitim duyuruları (Karadeniz)",url:"https://bilirkisilik.adalet.gov.tr/Home/SayfaDetay/egitim-kuruluslari02072020025435"}],
+  tayin:[{id:"yhgm-bhg",name:"YHGM Bölge Hizmet Grupları",url:"https://yhgm.saglik.gov.tr/TR-34970/bolge-hizmet-gruplari.html"}],
+  toki:[{id:"toki-satis",name:"TOKİ Satış Duyuruları",url:"https://www.toki.gov.tr/satis/tr/duyurular"},
+    {id:"toki-haber",name:"TOKİ Haberler",url:"https://www.toki.gov.tr/haberler"}],
+  onual:[{id:"onual",name:"Onu Al – indirime giren ürünler",url:"https://onual.com/"}]
+};
+const DEFAULT_KW={spor:["hakem","görevlendirme","toplantı","mhgk","mhk","gözlemci"],barolar:[],universite:[],saglik:[],adalet:["toplantı","alım","şart","kadro","başvuru","ilan","sınav"],tayin:[],toki:["giresun","samsun","ordu"],onual:[]};
+const MONTHS=["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
+const S={watch:[],items:[],kw:null,status:null,tayin:null,tayinHist:[],tayinDonem:[],tayinCal:{},tayinMeta:null,tab:"spor",sub:{},range:7,onlyPri:false,loaded:false,db:null,canWrite:true,imgOpen:null,imgCache:{}};
+const $=id=>document.getElementById(id);
+const low=s=>(s||"").toLocaleLowerCase("tr");
+const today=()=>new Date(new Date().toLocaleString("en-US",{timeZone:"Europe/Istanbul"}));
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function cutoff(days){const d=today();d.setDate(d.getDate()-days);return iso(d)}
+function key(it){return it.date||(it.baseline||!it.seen?"":it.seen.slice(0,10))}
+function fmt(k){if(!k)return"tarih yok";const[y,m,d]=k.split("-");return Number(d)+" "+MONTHS[Number(m)-1]+" "+y}
+function kwFor(tab){const k=S.kw||DEFAULT_KW;return Array.isArray(k[tab])?k[tab]:(DEFAULT_KW[tab]||[])}
+function matches(it){const t=low(it.title);return kwFor(it.tab).filter(w=>w&&t.includes(low(w)))}
+function inRange(it,days){const k=key(it);return k&&k>=cutoff(days)}
+
+function el(tag,attrs,...kids){const e=document.createElement(tag);for(const[a,v]of Object.entries(attrs||{})){if(a==="class")e.className=v;else if(a.startsWith("on"))e.addEventListener(a.slice(2),v);else e.setAttribute(a,v)}for(const k of kids){if(k==null)continue;e.append(k.nodeType?k:document.createTextNode(k))}return e}
+
+function renderTabs(){
+  const nav=$("tabs");nav.textContent="";
+  for(const t of TABS){
+    const pri=t.id==="osym"?osymSoon().length:t.id==="izle"?S.watch.filter(v=>!v.archived).length:S.items.filter(i=>uiTab(i.tab)===t.id&&!i.archived&&inRange(i,S.range)&&matches(i).length).length;
+    const b=el("button",{class:"tab",role:"tab","aria-selected":String(S.tab===t.id),type:"button",onclick:()=>{location.hash=t.id}},t.label,pri?el("span",{class:"n","aria-label":pri+(t.id==="izle"?" izlenecek":t.id==="osym"?" sınava 10 gün kala":" öncelikli")},String(pri)):null);
+    b.insertAdjacentHTML("afterbegin",ICONS[t.id]);
+    nav.append(b);
+  }
+}
+function renderSummary(){
+  const box=$("sum");box.textContent="";
+  const wk=S.items.filter(i=>!i.archived&&i.tab!=="onual"&&inRange(i,7));
+  const pri=wk.filter(i=>matches(i).length).length;
+  box.append(el("span",{class:"pill"},wk.length+" duyuru bu hafta"));
+  box.append(el("span",{class:"pill"+(pri?" pri":"")},pri+" öncelikli"));
+  const up=$("upd");
+  if(S.status&&S.status.runAt){const d=new Date(S.status.runAt);up.textContent="Son kontrol: "+d.toLocaleString("tr-TR",{timeZone:"Europe/Istanbul",day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"})}
+  else up.textContent=S.loaded?"Son kontrol: ilk otomatik kontrol bekleniyor":"Son kontrol: yükleniyor";
+}
+function renderList(){
+  const ul=$("list");ul.textContent="";
+  if(!S.loaded){ul.append(el("li",{class:"empty"},S.db===false?"Duyurular bu görünümde yüklenemedi. Sayfayı claude.ai üzerinden açın.":"Duyurular yükleniyor…"));return}
+  const q=low(S.q.trim());
+  let rows=q?S.items.filter(i=>low(i.title).includes(q)):S.items.filter(i=>i.tab===dtab()&&inRange(i,S.range));
+  rows=rows.filter(i=>S.showArch?i.archived:!i.archived);
+  if(S.onlyPri)rows=rows.filter(i=>matches(i).length);
+  if(S.hideRead)rows=rows.filter(i=>!i.read);
+  rows.sort((a,b)=>key(b).localeCompare(key(a))||(b.seen||"").localeCompare(a.seen||""));
+  if(!rows.length){
+    ul.append(el("li",{class:"empty"},q?"Aramanızla eşleşen duyuru yok.":S.showArch?"Arşivde duyuru yok.":S.onlyPri?"Bu aralıkta öncelikli duyuru yok.":S.hideRead?"Okunmamış duyuru kalmadı.":"Bu aralıkta yeni duyuru yok. Kaynakların son paylaşımları için 30 güne geçin."));
+    return;
+  }
+  const tabName=Object.assign({},...TABS.map(t=>({[t.id]:t.label})),SUBLABEL);
+  const srcName={};for(const k of Object.keys(SOURCES))for(const s of SOURCES[k])srcName[s.id]=s.name;
+  const recent=cutoff(1);
+  for(const it of rows){
+    const m=matches(it);
+    const meta=el("div",{class:"meta"},el("span",{class:"src"},srcName[it.source]||it.source));
+    if(it.seen&&it.seen.slice(0,10)>=recent&&!it.baseline)meta.append(el("span",{class:"new"},"YENİ"));
+    if(m.length){meta.prepend(el("span",{class:"flag"},"Öncelikli"));for(const w of m)meta.append(el("span",{class:"kw"},w))}
+    if(q)meta.prepend(el("span",{class:"tabname"},tabName[it.tab]||""));
+    if(it.keyDate)meta.append(el("span",{class:"kdate",title:"Duyurudan çıkarılan tarih"},(it.keyDateLabel||"Tarih")+": "+fmt(it.keyDate)+(it.keyTime?" "+it.keyTime:"")));
+    const a=el("a",{class:"t",href:it.url,target:"_blank",rel:"noopener",onclick:()=>{if(!it.read)setFlag(it,{read:true})}},it.title);
+    const cb=el("button",{type:"button",class:"calbtn mini"+(it.calAdded?" done":""),"aria-expanded":String(S.calOpen===it._id),onclick:()=>{S.calOpen=S.calOpen===it._id?null:it._id;S.calMsg=null;S.calDate=null;S.calTime=null;render()}},it.calAdded?"Takvimde":"Takvime ekle");
+    cb.insertAdjacentHTML("afterbegin",CAL_ICON);
+    const rd=el("button",{type:"button",class:"mini rdbtn"+(it.read?" on":""),onclick:()=>setFlag(it,{read:!it.read})},it.read?"Okunmadı yap":"Okundu");
+    const ar=el("button",{type:"button",class:"mini arbtn"+(it.archived?" on":""),onclick:()=>setFlag(it,{archived:!it.archived})},it.archived?"Arşivden çıkar":"Arşivle");
+    const acts=S.canWrite?el("div",{class:"acts"},cb,rd,ar):el("div",{class:"acts"},cb);
+    const gi=Array.isArray(it.imgs)?it.imgs:[];
+    if(gi.length)acts.prepend(el("button",{type:"button",class:"gbtn","aria-expanded":String(S.imgOpen===it._id),title:"Duyurudaki görsel (anahtar kelimenle ilgili)",onclick:()=>{S.imgOpen=S.imgOpen===it._id?null:it._id;render()}},"🖼 Görsel"+(gi.length>1?" ("+gi.length+")":"")));
+    meta.append(acts);
+    const body=el("div",{class:"b"},a,meta);
+    if(gi.length&&S.imgOpen===it._id)body.append(imgPanel(it,gi));
+    if(S.calOpen===it._id)body.append(calPanel(it,srcName[it.source]||it.source));
+    ul.append(el("li",{class:"row"+(m.length?" prio":"")+(it.read?" read":"")},el("div",{class:"d"},fmt(key(it))),body));
+  }
+}
+function imgPanel(it,ids){
+  const box=el("div",{class:"gpanel"});
+  if(it.imgNote)box.append(el("div",{class:"gnote"},"Görselde: "+it.imgNote));
+  const wrap=el("div",{class:"gimgs"});box.append(wrap);
+  let wait=false;
+  for(const id of ids){
+    if(typeof id==="string"&&/^g\/[a-z0-9_-]+\.(webp|jpe?g|png)$/i.test(id)){wrap.append(el("img",{src:id,alt:it.title,onclick:()=>showBig(id)}));continue}
+    const c=S.imgCache[id];
+    if(c&&c.data)wrap.append(el("img",{src:c.data,alt:it.title,onclick:()=>showBig(c.data)}));
+    else if(c&&c.err)wrap.append(el("div",{class:"gmsg"},"Görsel yüklenemedi."));
+    else{wait=true;if(!c)loadImg(id)}
+  }
+  if(wait)box.append(el("div",{class:"gmsg"},"Görsel yükleniyor…"));
+  box.append(el("div",{class:"gmsg"},el("a",{href:it.url,target:"_blank",rel:"noopener"},"Duyurunun aslını aç")));
+  return box;
+}
+function loadImg(id){
+  S.imgCache[id]={loading:true};
+  if(!S.db){S.imgCache[id]={err:true};return}
+  S.db.doc("gorsel/"+id).get().then(s=>{const d=s&&s.exists?s.data():null;S.imgCache[id]=d&&typeof d.data==="string"&&d.data.startsWith("data:image/")?{data:d.data}:{err:true};render()}).catch(()=>{S.imgCache[id]={err:true};render()});
+}
+function showBig(src){
+  const ov=el("div",{class:"gov",role:"dialog","aria-label":"Görsel"},el("img",{src,alt:""}));
+  const k=e=>{if(e.key==="Escape")close()};
+  function close(){ov.remove();document.removeEventListener("keydown",k)}
+  ov.addEventListener("click",close);document.addEventListener("keydown",k);
+  document.body.append(ov);
+}
+function calPanel(it,srcLabel){
+  const t=iso(today());const def=(it.keyDate&&it.keyDate>=t)?it.keyDate:(it.date&&it.date>=t)?it.date:t;
+  if(S.calTime==null&&it.keyTime&&it.keyDate&&it.keyDate>=t)S.calTime=it.keyTime;
+  const d=el("input",{type:"date",id:"calDate",value:S.calDate||def,"aria-label":"Tarih"});
+  const tm=el("input",{type:"time",id:"calTime",value:S.calTime||"","aria-label":"Saat (boş bırakılırsa tüm gün)"});
+  d.oninput=()=>{S.calDate=d.value};tm.oninput=()=>{S.calTime=tm.value};
+  const go=el("button",{type:"button",class:"go"},"Ekle");
+  const msg=el("div",{class:"msg"+(S.calMsg?" "+S.calMsg.kind:"")});
+  if(S.calMsg){msg.textContent=S.calMsg.text;if(S.calMsg.link)msg.append(" ",el("a",{href:S.calMsg.link,target:"_blank",rel:"noopener"},"Google Takvim'de aç"))}
+  else msg.textContent=(it.keyDate&&it.keyDate>=t?(it.keyDateLabel||"Tarih")+" duyurudan alındı; bir gün önce hatırlatma kurulur. ":"")+"Saat boş kalırsa tüm gün etkinlik olarak eklenir.";
+  go.onclick=()=>addToCalendar(it,srcLabel,d.value,tm.value,go);
+  return el("div",{class:"calpanel"},d,tm,go,msg);
+}
+function gcalLink(it,srcLabel,date,time){
+  const p=n=>String(n).padStart(2,"0");
+  let dates;
+  if(time){const s=new Date(date+"T"+time);const e=new Date(s.getTime()+3600000);const f=x=>x.getFullYear()+p(x.getMonth()+1)+p(x.getDate())+"T"+p(x.getHours())+p(x.getMinutes())+"00";dates=f(s)+"/"+f(e)}
+  else{const s=new Date(date+"T00:00");const e=new Date(s.getTime()+86400000);const f=x=>x.getFullYear()+p(x.getMonth()+1)+p(x.getDate());dates=f(s)+"/"+f(e)}
+  return "https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(it.title)+"&dates="+dates+"&ctz=Europe/Istanbul&details="+encodeURIComponent(srcLabel+"\n"+it.url);
+}
+async function addToCalendar(it,srcLabel,date,time,btn){
+  if(!date){S.calMsg={kind:"err",text:"Önce bir tarih seçin."};render();return}
+  const link=gcalLink(it,srcLabel,date,time);
+  if(!S.mcp){S.calMsg={kind:"",text:"Doğrudan ekleme bu görünümde kullanılamıyor.",link};render();return}
+  btn.disabled=true;btn.textContent="Ekleniyor…";
+  let start,end,allDay=!time;
+  if(time){const[h,mi]=time.split(":").map(Number);const eh=String((h+1)%24).padStart(2,"0");start=date+"T"+time+":00";end=(h===23?nextDay(date):date)+"T"+eh+":"+String(mi).padStart(2,"0")+":00"}
+  else{start=date+"T00:00:00";end=nextDay(date)+"T00:00:00"}
+  try{
+    const input={summary:(it.keyDateLabel&&date===it.keyDate?it.keyDateLabel+": ":"")+it.title,startTime:start,endTime:end,allDay,description:srcLabel+"\n"+it.url};
+    if(it.keyDate&&date===it.keyDate)input.overrideReminders=[{method:"popup",minutes:allDay?1440-540:1440}];else input.useDefaultReminders=true;
+    await S.mcp.callTool("Google Calendar","create_event",input);
+    S.calMsg={kind:"ok",text:"Google Takvim'e eklendi."};
+    if(S.db&&it._id){try{await S.db.doc("items/"+it._id).update({calAdded:true})}catch(_){}}
+  }catch(e){
+    const c=e&&e.code;
+    if(c==="server_not_connected"||c==="selection_required")S.calMsg={kind:"err",text:"Google Takvim bağlantısı bulunamadı. claude.ai Ayarlar → Bağlayıcılar'dan ekleyebilir ya da bağlantıyla açabilirsiniz.",link};
+    else if(c==="needs_reauth")S.calMsg={kind:"err",text:"Google Takvim bağlantısının yenilenmesi gerekiyor (claude.ai Ayarlar → Bağlayıcılar).",link};
+    else if(c==="not_in_manifest"||c==="approval_required")S.calMsg={kind:"err",text:"Takvime ekleme izni verilmedi. Tekrar denediğinizde izin istenir ya da bağlantıyla açabilirsiniz.",link};
+    else if(c==="tool_error")S.calMsg={kind:"err",text:"Google Takvim etkinliği oluşturmadı: "+(e.message||"bilinmeyen hata"),link};
+    else S.calMsg={kind:"err",text:"Etkinlik eklenmiş olabilir; tekrar denemeden önce takviminize bakın.",link};
+  }
+  render();
+}
+const writing={};
+async function setFlag(it,patch){
+  if(!S.db||!it._id)return;
+  Object.assign(it,patch);render();
+  const k=it._id;writing[k]=(writing[k]||Promise.resolve()).then(()=>S.db.doc("items/"+k).update(patch)).catch(e=>{if(e&&e.code==="invalid_argument"){S.canWrite=false;render()}});
+}
+function nextDay(date){const d=new Date(date+"T12:00");d.setDate(d.getDate()+1);return iso(d)}
+function renderKw(){
+  const box=$("kwChips");box.textContent="";
+  $("kwNote").textContent=dtab()==="toki"?"TOKİ'de yalnızca bu illerden birinin geçtiği duyurular toplanır; her biri çerçeveyle işaretlenir ve günlük kontrolde telefonunuza bildirim gider. İl eklemek için kelime ekleyin.":"Bu sekmede başlığında bu kelimelerden biri geçen duyurular çerçeveyle işaretlenir ve günlük kontrolde telefonunuza bildirim gider.";
+  const list=kwFor(dtab());
+  if(!list.length)box.append(el("span",{class:"note"},"Bu sekmede öncelik kelimesi yok."));
+  list.forEach((w,i)=>box.append(el("span",{class:"chip"},w,S.canWrite?el("button",{type:"button","aria-label":w+" kelimesini kaldır",onclick:()=>saveKw(list.filter((_,j)=>j!==i))},"×"):null)));
+  $("kwForm").hidden=!S.canWrite;
+}
+function renderSrcs(){
+  const ul=$("srcs");ul.textContent="";
+  for(const s of (SOURCES[dtab()]||[])){
+    const st=S.status&&S.status.sources&&S.status.sources[s.id];
+    let cls="na",txt="bekleniyor";
+    if(st){cls=st.ok?"ok":"bad";txt=st.ok?"çalışıyor":(st.note||"erişilemedi")}
+    ul.append(el("li",{},el("a",{href:s.url,target:"_blank",rel:"noopener"},s.name),el("span",{class:"st "+cls},txt)));
+  }
+}
+const TRIGGER_ID="trig_01NJoAKKu7e3dRFoMJkmPpom";
+const REFRESH_ICON=SVG('<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>');
+const R={busy:false,startedAt:null,msg:null,kind:""};
+function renderRefresh(){
+  const b=$("refresh");b.hidden=false;b.disabled=R.busy;b.className="refresh"+(R.busy?" busy":"");
+  b.textContent=R.busy?"Kontrol ediliyor…":"Tümünü yenile";b.insertAdjacentHTML("afterbegin",REFRESH_ICON);
+  const m=$("rmsg");m.className="rmsg"+(R.kind?" "+R.kind:"");m.textContent=R.msg||"";
+}
+async function doRefresh(){
+  window.open(updLink(""),"_blank","noopener");return;
+  if(!S.mcp||R.busy)return;
+  R.busy=true;R.startedAt=Date.now();R.kind="";R.msg="Kontrol başlatılıyor…";renderRefresh();
+  try{
+    await S.mcp.callTool("Claude Code Remote","fire_trigger",{trigger_id:TRIGGER_ID,text:"Bu çalışma sayfadaki 'Şimdi yenile' tuşuyla elle başlatıldı. Normal adımları uygula."});
+    R.msg="Kontrol başladı. Tüm kaynaklar birkaç dakikada taranır; liste bitince kendiliğinden güncellenir.";
+    setTimeout(()=>{if(R.busy){R.busy=false;R.kind="";R.msg="Kontrol hâlâ sürüyor olabilir; liste bitince kendiliğinden güncellenir.";renderRefresh()}},15*60000);
+  }catch(e){
+    R.busy=false;R.kind="err";const c=e&&e.code;
+    R.msg=(c==="not_in_manifest"||c==="approval_required")?"Yenileme izni verilmedi. Tekrar bastığınızda izin istenir.":
+      (c==="server_not_connected"||c==="selection_required")?"Claude Code Remote bağlantısı bu görünümde yok; günlük kontrol yine her sabah çalışır.":
+      (c==="tool_error")?"Kontrol başlatılamadı: "+(e.message||"bilinmeyen hata"):"Kontrol başlatılamadı. Biraz sonra yeniden deneyin.";
+  }
+  renderRefresh();
+}
+$("refresh").addEventListener("click",doRefresh);
+S.tabRuns=null;S.tabR={};
+function tabSrcIds(t){const ids=[];for(const k of (GROUPS[t]?GROUPS[t].map(x=>x.id):[t]))for(const s of (SOURCES[k]||[]))ids.push(s.id);return ids}
+function tabUpdated(t){
+  const c=[];
+  const add=v=>{if(v){const d=new Date(v);if(!isNaN(d))c.push({d,v:String(v)})}};
+  if(t==="oyun")add(S.oyunStatus&&S.oyunStatus.runAt);
+  else if(t==="osym"){}
+  else if(t==="tayin"){add(S.tayin&&S.tayin.checkedAt);add(S.tayinMeta&&S.tayinMeta.checkedAt)}
+  else add(S.status&&S.status.runAt);
+  add(S.tabRuns&&S.tabRuns[t]);
+  c.sort((a,b)=>b.d-a.d);
+  return c[0]||null;
+}
+function fmtUpd(u){return u.v.length<=10?fmtLong(u.v):u.d.toLocaleString("tr-TR",{timeZone:"Europe/Istanbul",day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"})}
+function renderTabUpd(){
+  const box=$("tabupd");if(!box)return;box.textContent="";
+  const t=S.tab,R2=S.tabR[t]||(S.tabR[t]={});
+  const u=tabUpdated(t);
+  if(R2.busy&&u&&u.d.getTime()>=R2.startedAt-60000){R2.busy=false;R2.kind="ok";R2.msg="Güncellendi."}
+  if(R2.msg)box.append(el("span",{class:"tumsg"+(R2.kind?" "+R2.kind:""),role:"status"},R2.msg));
+  box.append(el("span",{class:"tudate"},u?"Son güncelleme: "+fmtUpd(u):"Son güncelleme: kayıt yok"));
+  const b=el("a",{class:"refresh tubtn",href:updLink(t),target:"_blank",rel:"noopener",style:"text-decoration:none",title:"Claude'da hazır komutla yeni sohbet açar; gönder'e basman yeterli."},"Güncelle");
+  b.insertAdjacentHTML("afterbegin",REFRESH_ICON);
+  box.append(b);
+}
+const PAGE_URL="https://claude.ai/artifact/812Q3pgJ9TLpqP9PSVyQFd";
+function updLink(t){
+  let q;
+  if(!t)q="Duyuru Takip sayfasının ("+PAGE_URL+") tüm sekmelerini güncelle: bütün kaynakları kontrol et, yeni duyuruları ekle, öncelik kelimelerine göre işaretle; bitince status/last belgesindeki runAt alanını şimdiki zamanla yaz.";
+  else{
+    const label=(TABS.find(x=>x.id===t)||{}).label||t,ids=tabSrcIds(t);
+    q="Duyuru Takip sayfasının ("+PAGE_URL+") yalnızca '"+label+"' sekmesini güncelle"+(ids.length?" (kaynaklar: "+ids.join(", ")+")":"")+": kaynaklarını kontrol et, yeni duyuruları ekle, öncelik kelimelerine göre işaretle; diğer sekmelere dokunma. Bitince status/tabs belgesine '"+t+"' alanı olarak şimdiki zamanı (ISO, +03:00) yaz, diğer alanları koru.";
+  }
+  return "https://claude.ai/new?q="+encodeURIComponent(q);
+}
+async function doRefreshTab(t){
+  const R2=S.tabR[t]||(S.tabR[t]={});
+  if(!S.mcp||R2.busy)return;
+  const label=(TABS.find(x=>x.id===t)||{}).label||t;
+  R2.busy=true;R2.startedAt=Date.now();R2.kind="";R2.msg="Kontrol başlatılıyor…";renderTabUpd();
+  const ids=tabSrcIds(t);
+  const text="Bu çalışma sayfadaki '"+label+"' sekmesinin 'Güncelle' tuşuyla elle başlatıldı. YALNIZCA bu sekmenin kaynaklarını kontrol et"+(ids.length?" ("+ids.join(", ")+")":"")+"; diğer sekmelere dokunma. Bittiğinde status/tabs belgesine "+t+" alanı olarak şimdiki zamanı (ISO, +03:00) yaz; belgedeki diğer alanları koru.";
+  try{
+    await S.mcp.callTool("Claude Code Remote","fire_trigger",{trigger_id:TRIGGER_ID,text});
+    R2.msg="Kontrol başladı. Birkaç dakika sürebilir; bitince tarih kendiliğinden güncellenir.";
+    setTimeout(()=>{if(R2.busy){R2.busy=false;R2.kind="";R2.msg="Kontrol hâlâ sürüyor olabilir; bitince tarih kendiliğinden güncellenir.";renderTabUpd()}},15*60000);
+  }catch(e){
+    R2.busy=false;R2.kind="err";const c=e&&e.code;
+    R2.msg=(c==="not_in_manifest"||c==="approval_required")?"Güncelleme izni verilmedi. Tekrar bastığınızda izin istenir.":
+      (c==="server_not_connected"||c==="selection_required")?"Claude Code Remote bağlantısı bu görünümde yok; günlük kontrol yine her sabah çalışır.":
+      (c==="tool_error")?"Kontrol başlatılamadı: "+(e.message||"bilinmeyen hata"):"Kontrol başlatılamadı. Biraz sonra yeniden deneyin.";
+  }
+  renderTabUpd();
+}
+function onStatus(st){
+  if(R.busy&&st&&st.runAt&&new Date(st.runAt).getTime()>=R.startedAt-60000){
+    R.busy=false;R.kind="ok";
+    R.msg="Güncellendi: "+(st.newCount||0)+" yeni duyuru"+(st.priorityNew?", "+st.priorityNew+" öncelikli":"")+".";
+  }
+}
+function renderAlert(){
+  const box=$("oalert");box.textContent="";
+  const list=S.osymTop?oUp().filter(o=>!o.est&&!S.osymAr[o.id]&&oDays(o.date)<=15):[];
+  box.hidden=!list.length;
+  for(const o of list){
+    const d=oDays(o.date);
+    const a=el("a",{href:"#osym",title:"ÖSYM Takvim sekmesini aç"},"ÖSYM: "+o.name+" · "+fmt(o.date),el("b",{},d>0?d+" gün kaldı":"Bugün"));
+    a.insertAdjacentHTML("afterbegin",ICONS.osym);
+    box.append(a);
+  }
+}
+function render(){
+  renderRefresh();renderAlert();renderTabs();renderTabUpd();renderSummary();
+  const ty=S.tab==="tayin",oy=S.tab==="oyun",iz=S.tab==="izle",os=S.tab==="osym",sp=ty||oy||iz||os;
+  $("tayinView").hidden=!ty;$("oyunView").hidden=!oy;$("izleView").hidden=!iz;$("osymView").hidden=!os;$("bar").hidden=sp;$("list").hidden=sp;$("side").hidden=sp;
+  renderSub();
+  if(ty){renderTayin();return}
+  if(oy){renderOyun();return}
+  if(iz){renderIzle();return}
+  if(os){renderOsym();return}
+  renderList();renderKw();renderSrcs();
+}
+const TR_MONTHS=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+function fmtLong(k){if(!k)return"";const[y,m,d]=k.slice(0,10).split("-");return Number(d)+" "+TR_MONTHS[Number(m)-1]+" "+y}
+const TSUBS=[{id:"takvim",label:"Tayin Takvimi"},{id:"yurtdisi",label:"Yurt Dışı Görev"},{id:"gruplar",label:"Bölge Grupları"},{id:"gecmis",label:"Dönem Geçmişi"}];
+S.tsub="takvim";S.tfilt="hepsi";S.tmsg=null;
+try{const v=localStorage.getItem("tsub");if(TSUBS.some(t=>t.id===v))S.tsub=v}catch(_){}
+const TUR={ildisi:"İl dışı",ilici:"İl içi",yurtdisi:"Yurt dışı"};
+const DST={kapandi:"Başvuru kapandı",acik:"Süreç açık",yakinda:"İlan bekleniyor",beklenen:"Bekleniyor",tamamlandi:"Tamamlandı"};
+function renderTayin(){
+  const box=$("tayinView");box.textContent="";
+  const sub=el("div",{class:"subtabs",role:"tablist","aria-label":"Tayin bölümleri"});
+  for(const t of TSUBS)sub.append(el("button",{type:"button",role:"tab",class:"stab","aria-selected":String(S.tsub===t.id),onclick:()=>{S.tsub=t.id;try{localStorage.setItem("tsub",t.id)}catch(_){}render()}},t.label));
+  box.append(sub);
+  if(S.tsub==="gruplar")renderGruplar(box);else if(S.tsub==="gecmis")renderGecmis(box);else renderTakvim(box,S.tsub==="yurtdisi"?"yurtdisi":"tayin");
+}
+function stepDay(s){return s.end||s.date}
+function fmtStep(s){
+  let t=s.end?(fmt(s.date)+" – "+fmt(s.end)):fmt(s.date);
+  if(s.time)t+=s.end?" ("+s.time+"'e kadar)":" "+s.time;
+  return t;
+}
+function calBtn(d,i,s){
+  const k=d._id+"|"+i,day=stepDay(s),t=iso(today());
+  if(!day||day<t)return el("span",{class:"st na"},"geçti");
+  const title=(d.tur==="yurtdisi"?"Yurt dışı görev · ":"Tayin · ")+s.label+(s.end?" (son gün)":"")+" – "+(d.title||"");
+  const info=(TUR[d.tur]||"")+" · "+(d.title||"")+" · "+fmtStep(s);
+  if(!S.mcp){
+    const a=el("a",{class:"mini calbtn",href:gcalLink({title,url:d.sourceUrl||""},info,day,s.time||""),target:"_blank",rel:"noopener"},"Takvime ekle");
+    a.insertAdjacentHTML("afterbegin",CAL_ICON);return a;
+  }
+  const done=!!S.tayinCal[k];
+  const b=el("button",{type:"button",class:"mini calbtn"+(done?" done":"")},done?"Takvimde":"Takvime ekle");
+  b.insertAdjacentHTML("afterbegin",CAL_ICON);
+  b.onclick=()=>tayinToCal(k,title,info,d.sourceUrl||"",s,b);
+  return b;
+}
+async function tayinToCal(k,title,info,url,s,b){
+  const day=stepDay(s),time=s.time||"";
+  const link=gcalLink({title,url},info,day,time);
+  b.disabled=true;b.textContent="Ekleniyor…";
+  const p=n=>String(n).padStart(2,"0");
+  let start,end,allDay=!time;
+  if(time){
+    const[h,mi]=time.split(":").map(Number);
+    if(s.end){start=day+"T"+p(Math.max(h-1,0))+":"+p(mi)+":00";end=day+"T"+p(h)+":"+p(mi)+":00"}
+    else{start=day+"T"+p(h)+":"+p(mi)+":00";end=(h===23?nextDay(day):day)+"T"+p((h+1)%24)+":"+p(mi)+":00"}
+  }else{start=day+"T00:00:00";end=nextDay(day)+"T00:00:00"}
+  try{
+    await S.mcp.callTool("Google Calendar","create_event",{summary:title,startTime:start,endTime:end,allDay,description:info+(url?"\n"+url:""),overrideReminders:[{method:"popup",minutes:allDay?900:1440}]});
+    S.tayinCal[k]=true;
+    S.tmsg={kind:"ok",text:"Google Takvim'e eklendi: "+title+". Bir gün önce hatırlatma kuruldu."};
+    if(S.db){try{await S.db.doc("tayin/cal").set(Object.assign({},S.tayinCal))}catch(_){}}
+  }catch(e){
+    const c=e&&e.code;
+    let text;
+    if(c==="server_not_connected"||c==="selection_required")text="Google Takvim bağlantısı bulunamadı. claude.ai Ayarlar → Bağlayıcılar'dan ekleyebilir ya da bağlantıyla açabilirsiniz.";
+    else if(c==="needs_reauth")text="Google Takvim bağlantısının yenilenmesi gerekiyor (claude.ai Ayarlar → Bağlayıcılar).";
+    else if(c==="not_in_manifest"||c==="approval_required")text="Takvime ekleme izni verilmedi. Tekrar denediğinizde izin istenir ya da bağlantıyla açabilirsiniz.";
+    else if(c==="tool_error")text="Google Takvim etkinliği oluşturmadı: "+(e.message||"bilinmeyen hata");
+    else text="Etkinlik eklenmiş olabilir; tekrar denemeden önce takviminize bakın.";
+    S.tmsg={kind:"err",text,link};
+  }
+  render();
+}
+function stepArBtn(d,i){
+  if(!S.canWrite||!S.db)return null;
+  const on=(d.archivedSteps||[]).includes(i);
+  return el("button",{type:"button",class:"mini arbtn"+(on?" on":""),title:on?"Tarihi arşivden çıkar":"Bu tarihi arşivle",onclick:()=>{const a=(d.archivedSteps||[]).filter(x=>x!==i);if(!on)a.push(i);d.archivedSteps=a;render();S.db.doc("tayinDonem/"+d._id).update({archivedSteps:a}).catch(e=>{if(e&&e.code==="invalid_argument"){S.canWrite=false;render()}})}},on?"Geri al":"Arşivle");
+}
+function renderTakvim(box,mode){
+  const yd=mode==="yurtdisi";
+  const t=iso(today());
+  const bar=el("div",{class:"tybar"});
+  const seg=el("div",{class:"seg",role:"group","aria-label":"Tayin türü"});
+  for(const[k,l]of[["hepsi","Tümü"],["ildisi","İl dışı (iller arası)"],["ilici","İl içi"]])seg.append(el("button",{type:"button","aria-pressed":String(S.tfilt===k),onclick:()=>{S.tfilt=k;render()}},l));
+  if(!yd)bar.append(seg);else bar.append(el("span",{class:"note"},"Sağlık Bakanlığı yurt dışı sağlık tesisleri ve hac sağlık personeli görevlendirmeleri"));
+  const M=S.tayinMeta;
+  bar.append(el("span",{class:"sub"},M&&M.checkedAt?"Son haftalık kontrol: "+fmtLong(M.checkedAt):"Haftalık kontrol: her Salı"));
+  box.append(bar);
+  if(S.tmsg){const m=el("div",{class:"tmsg "+S.tmsg.kind},S.tmsg.text);if(S.tmsg.link)m.append(" ",el("a",{href:S.tmsg.link,target:"_blank",rel:"noopener"},"Google Takvim'de aç"));box.append(m)}
+  const D0=(S.tayinDonem||[]).filter(d=>yd?d.tur==="yurtdisi":(d.tur!=="yurtdisi"&&(S.tfilt==="hepsi"||d.tur===S.tfilt)));
+  const sA=d=>d.archivedSteps||[];const inArch=d=>d.archived||sA(d).length>0;
+  const ac=D0.filter(d=>!d.archived).length,an=D0.filter(inArch).length;
+  const aseg=el("div",{class:"seg",role:"group","aria-label":"Arşiv"});
+  for(const[k,l,n]of[[false,"Aktif",ac],[true,"Arşiv",an]])aseg.append(el("button",{type:"button","aria-pressed":String(!!S.tarch===k),onclick:()=>{S.tarch=k;render()}},l+" ("+n+")"));
+  bar.prepend(aseg);
+  const D=D0.filter(d=>S.tarch?inArch(d):!d.archived).sort((a,b)=>(b.sort||b._id).localeCompare(a.sort||a._id));
+  if(!D.length){box.append(el("div",{class:"empty"},!S.loaded?"Yükleniyor…":S.tarch?"Arşivde kayıt yok.":(yd?"Kayıtlı yurt dışı görevlendirme ilanı yok.":"Bu türde kayıtlı tayin dönemi yok.")+" Haftalık kontrol yeni ilanları buraya ekler."));return}
+  const up=[];
+  for(const d of D)(d.steps||[]).forEach((s,i)=>{if(stepDay(s)>=t&&(S.tarch?(d.archived||sA(d).includes(i)):!sA(d).includes(i)))up.push({d,s,i})});
+  up.sort((a,b)=>stepDay(a.s).localeCompare(stepDay(b.s)));
+  if(up.length){
+    box.append(el("h2",{class:"tysec"},"Yaklaşan tarihler"));
+    const ul=el("ul",{class:"upc"});
+    for(const u of up.slice(0,8))ul.append(el("li",{},el("span",{class:"ud"},fmtStep(u.s)),el("span",{class:"ub"},el("b",{},u.s.label),el("span",{class:"un"},el("span",{class:"tur "+u.d.tur},TUR[u.d.tur]||""),u.d.title||"")),el("span",{class:"acts"},calBtn(u.d,u.i,u.s),stepArBtn(u.d,u.i))));
+    box.append(ul);
+  }else box.append(el("p",{class:"note"},(yd?"Şu an açık bir yurt dışı görevlendirme başvurusu yok.":"Şu an yaklaşan bir tayin tarihi yok.")+" Yeni ilan çıktığında haftalık kontrol tarihleri buraya ekler ve telefonunuza bildirim gönderir."));
+  box.append(el("h2",{class:"tysec"},yd?"İlanlar":"Dönemler"));
+  for(const d of D){
+    const card=el("div",{class:"tdon"+(d.status==="acik"?" open":"")});
+    card.append(el("div",{class:"tdh"},el("span",{class:"tur "+d.tur},TUR[d.tur]||""),el("h3",{},d.title||d._id),el("span",{class:"dst "+(d.status||"")},DST[d.status]||d.status||""),S.canWrite&&S.db?el("button",{type:"button",class:"mini arbtn"+(d.archived?" on":""),onclick:()=>{d.archived=!d.archived;render();S.db.doc("tayinDonem/"+d._id).update({archived:d.archived}).catch(e=>{if(e&&e.code==="invalid_argument"){S.canWrite=false;render()}})}},d.archived?"Arşivden çıkar":"Arşivle"):null));
+    const steps=d.steps||[];
+    if(steps.length){
+      const nextI=steps.findIndex(s=>stepDay(s)>=t);
+      const tb=el("tbody");
+      steps.forEach((s,i)=>{const ar=sA(d).includes(i);if(S.tarch?!(d.archived||ar):ar)return;tb.append(el("tr",{class:stepDay(s)<t?"past":(i===nextI?"next":"")},el("td",{class:"dt"},fmtStep(s)),el("td",{},s.label),el("td",{class:"ac"},el("span",{class:"acts"},calBtn(d,i,s),stepArBtn(d,i)))))});
+      card.append(el("div",{class:"tswrap"},el("table",{class:"ts"},tb)));
+    }
+    if(d.note)card.append(el("p",{class:"note"},d.note));
+    if(d.sourceUrl)card.append(el("a",{class:"tsrc",href:d.sourceUrl,target:"_blank",rel:"noopener"},"Kaynak: "+(d.sourceName||"duyuru")));
+    box.append(card);
+  }
+  box.append(el("p",{class:"note"},(yd?"Unvan listesi ve şartlar her ilanda değişir; başvurmadan önce resmi ilan metnini ve unvan cetvelini kontrol edin.":"Tarihler Bakanlık ilanlarından ve haberlerden derlenir; başvurmadan önce resmi ilan metnini ve EKİP'i kontrol edin.")+" Takvime eklenen etkinliğe bir gün önce hatırlatma kurulur."));
+}
+function renderGruplar(box){
+  const T=S.tayin;
+  if(!T){box.append(el("div",{class:"empty"},S.loaded?"Tayin verisi henüz yüklenmedi. Aylık kontrol ilk çalıştığında burada tıbbi sekreter bölge grupları görünecek.":"Yükleniyor…"));return}
+  const hl=(T.highlight||["GİRESUN","ORDU"]);
+  const where=il=>{for(const r of T.regions||[])for(const g of "ABCDE")if((r.groups[g]||[]).includes(il))return r.no+". Bölge "+g+" Grubu";return"listede yok"};
+  box.append(el("div",{class:"tyhead"},el("h2",{},(T.unvan||"Tıbbi Sekreter")+" · "+(T.period||"")),
+    el("span",{class:"sub"},"Yayın: "+fmtLong(T.publishedAt)+(T.checkedAt?" · Son kontrol: "+fmtLong(T.checkedAt):""))));
+  const cards=el("div",{class:"tycards"});
+  for(const il of hl){
+    const chg=(T.changes||[]).find(c=>c.il===il);
+    cards.append(el("div",{class:"tycard"},el("div",{class:"il"},il.charAt(0)+il.slice(1).toLocaleLowerCase("tr")),el("div",{class:"gr"},where(il)),
+      el("div",{class:"ch"+(chg?" up":"")},chg?("Değişti: önceki dönem "+chg.from):(T.changes&&T.prevPeriod?"Önceki dönemle aynı":"Önceki dönem karşılaştırması sonraki dönemden itibaren"))));
+  }
+  box.append(cards);
+  if((T.changes||[]).length){
+    const others=T.changes.filter(c=>!hl.includes(c.il));
+    if(others.length)box.append(el("div",{class:"tychg"},"Grubu değişen diğer iller ("+(T.prevPeriod||"önceki dönem")+" → "+T.period+"): "+others.map(c=>c.il+" "+c.from+" → "+c.to).join(" · ")));
+  }
+  const links=el("div",{class:"tylinks"});
+  if(T.driveUrl)links.append(el("a",{href:T.driveUrl,target:"_blank",rel:"noopener"},"PDF'i aç (Drive, s. "+(T.pdfPage||"?")+")"));
+  if(T.pageUrl)links.append(el("a",{href:T.pageUrl,target:"_blank",rel:"noopener"},"YHGM dönem sayfası"));
+  links.append(el("a",{href:"https://yhgm.saglik.gov.tr/TR-34970/bolge-hizmet-gruplari.html",target:"_blank",rel:"noopener"},"Tüm dönemler"));
+  box.append(links);
+  const st=new Set(T.starred||[]);
+  const tb=el("table",{class:"ty"});
+  const hr=el("tr",{},el("th",{},"Bölge"));for(const g of "ABCDE")hr.append(el("th",{},g+" Grubu"));
+  tb.append(el("thead",{},hr));const bd=el("tbody");
+  for(const r of T.regions||[]){
+    const tr=el("tr",{},el("td",{class:"rg"},r.no+". Bölge"));
+    for(const g of "ABCDE"){const td=el("td");for(const il of (r.groups[g]||[]))td.append(el("span",{class:"c"+(hl.includes(il)?" hl":"")+(st.has(il)?" st":"")},il));tr.append(td)}
+    bd.append(tr);
+  }
+  tb.append(bd);box.append(el("div",{class:"tywrap"},tb));
+  if(st.size)box.append(el("p",{class:"note"},"* Bu illerde Personel Dağılım Cetveline (PDC) göre personel istihdamı planlanmamıştır."));
+  if(T.note)box.append(el("p",{class:"note"},T.note));
+  box.append(el("p",{class:"note"},"Kaynak: Sağlık Bakanlığı YHGM, Bölge Hizmet Grupları – Ataması Sınav Yolu İle Yapılanlar. PDF her Pazartesi Drive'daki Tayin klasörüne indirilir; tablo ayda bir güncellenir."));
+}
+function renderGecmis(box){
+  const H=(S.tayinHist||[]).slice().sort((a,b)=>(b._id||"").localeCompare(a._id||""));
+  if(!H.length){box.append(el("div",{class:"empty"},"Henüz dönem geçmişi yok."));return}
+  box.append(el("p",{class:"note"},"Tıbbi sekreter unvanında Giresun ve Ordu'nun dönemlere göre bölge grubu."));
+  const tb=el("table",{class:"ty"});
+  tb.append(el("thead",{},el("tr",{},el("th",{},"Dönem"),el("th",{},"Yayın"),el("th",{},"Giresun"),el("th",{},"Ordu"),el("th",{},"PDF"))));
+  const bd=el("tbody");
+  for(const h of H)bd.append(el("tr",{},el("td",{class:"rg"},h.period||h._id),el("td",{},fmtLong(h.publishedAt)||"-"),el("td",{},h.giresun||"-"),el("td",{},h.ordu||"-"),el("td",{},h.driveUrl?el("a",{href:h.driveUrl,target:"_blank",rel:"noopener"},"Aç"):"-")));
+  tb.append(bd);box.append(el("div",{class:"tywrap"},tb));
+}
+
+let saving=Promise.resolve();
+function saveKw(list){
+  const next=Object.assign({},DEFAULT_KW,S.kw||{});next[dtab()]=list;S.kw=next;render();
+  if(!S.db)return;
+  saving=saving.then(()=>S.db.doc("config/keywords").set(next)).catch(e=>{
+    if(e&&e.code==="invalid_argument"){S.canWrite=false;render()}
+  });
+}
+$("kwForm").addEventListener("submit",e=>{
+  e.preventDefault();const v=$("kwInput").value.trim();if(!v)return;
+  const list=kwFor(dtab());if(!list.some(w=>low(w)===low(v)))saveKw(list.concat(v));
+  $("kwInput").value="";
+});
+$("r7").onclick=()=>{S.range=7;$("r7").setAttribute("aria-pressed","true");$("r30").setAttribute("aria-pressed","false");render()};
+$("r30").onclick=()=>{S.range=30;$("r30").setAttribute("aria-pressed","true");$("r7").setAttribute("aria-pressed","false");render()};
+$("onlyPri").onchange=e=>{S.onlyPri=e.target.checked;try{localStorage.setItem("onlyPri",S.onlyPri?"1":"")}catch(_){}render()};
+try{if(localStorage.getItem("onlyPri")){S.onlyPri=true;$("onlyPri").checked=true}}catch(_){}
+S.q="";S.hideRead=false;S.showArch=false;
+$("q").addEventListener("input",e=>{S.q=e.target.value;renderList()});
+$("hideRead").onchange=e=>{S.hideRead=e.target.checked;try{localStorage.setItem("hideRead",S.hideRead?"1":"")}catch(_){}render()};
+$("showArch").onchange=e=>{S.showArch=e.target.checked;render()};
+try{if(localStorage.getItem("hideRead")){S.hideRead=true;$("hideRead").checked=true}}catch(_){}
+const PLAT={steam:"Steam",epic:"Epic Games",gog:"GOG",prime:"Prime Gaming",itch:"itch.io",ubisoft:"Ubisoft",ea:"EA",diger:"Diğer"};
+const KIND={oyun:"Oyun",dlc:"DLC / eklenti",deneme:"Ücretsiz hafta sonu"};
+S.games=[];S.oyunCfg=null;S.oyunStatus=null;S.gfilt="aktif";S.gplat="hepsi";S.gmsg=null;
+const OY_DEF={notify:{steam:true,epic:true,gog:true,diger:true},dlc:false,deneme:false,email:true};
+function oyCfg(){const c=S.oyunCfg||{};return{notify:Object.assign({},OY_DEF.notify,c.notify||{}),dlc:c.dlc??OY_DEF.dlc,deneme:c.deneme??OY_DEF.deneme,email:c.email??OY_DEF.email}}
+function pkey(p){return["steam","epic","gog"].includes(p)?p:"diger"}
+function gState(g){const n=Date.now(),s=g.start?Date.parse(g.start):0,e=g.end?Date.parse(g.end):Infinity;if(s>n)return"yakinda";if(e<n)return"bitti";return"aktif"}
+function ist(iso){return new Date(iso).toLocaleString("tr-TR",{timeZone:"Europe/Istanbul",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
+function left(iso){const ms=Date.parse(iso)-Date.now();if(ms<=0)return"bitti";const h=Math.floor(ms/3600000);if(h<1)return"1 saatten az kaldı";if(h<48)return h+" saat kaldı";return Math.floor(h/24)+" gün kaldı"}
+function istLocal(ms){return new Date(ms).toLocaleString("sv-SE",{timeZone:"Europe/Istanbul"}).replace(" ","T").slice(0,19)}
+function saveOyCfg(c){S.oyunCfg=c;render();if(S.db)S.db.doc("oyun/config").set(c).catch(e=>{if(e&&e.code==="invalid_argument"){S.canWrite=false;render()}})}
+async function gameToCal(g,b){
+  const up=gState(g)==="yakinda";const at=Date.parse(up?g.start:g.end);
+  const title=(up?"Ücretsiz oyun başlıyor: ":"Ücretsiz oyun son saat: ")+g.title+" ("+(PLAT[g.platform]||g.platform)+")";
+  const startMs=up?at:at-3600000,endMs=up?at+1800000:at;
+  const p=n=>String(n).padStart(2,"0");const f=ms=>{const d=new Date(istLocal(ms));return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+"T"+p(d.getHours())+p(d.getMinutes())+"00"};
+  const link="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(title)+"&dates="+f(startMs)+"/"+f(endMs)+"&ctz=Europe/Istanbul&details="+encodeURIComponent(g.url||"");
+  if(!S.mcp){window.open(link,"_blank","noopener");return}
+  b.disabled=true;b.textContent="Ekleniyor…";
+  try{
+    await S.mcp.callTool("Google Calendar","create_event",{summary:title,startTime:istLocal(startMs),endTime:istLocal(endMs),description:(g.url||"")+(g.worth?"\nDeğeri: "+g.worth:""),useDefaultReminders:false});
+    S.gmsg={kind:"ok",text:"Google Takvim'e eklendi: "+title};
+  }catch(e){const c=e&&e.code;S.gmsg={kind:"err",link,text:c==="server_not_connected"||c==="selection_required"?"Google Takvim bağlantısı bulunamadı.":c==="not_in_manifest"||c==="approval_required"?"Takvime ekleme izni verilmedi; tekrar denediğinizde izin istenir.":c==="tool_error"?"Google Takvim etkinliği oluşturmadı: "+(e.message||""):"Etkinlik eklenmiş olabilir; takviminize bakın."}}
+  render();
+}
+function renderOyun(){
+  const box=$("oyunView");box.textContent="";
+  const st=S.oyunStatus;
+  box.append(el("div",{class:"tyhead"},el("h2",{},"Ücretsiz Oyunlar"),el("span",{class:"sub"},st&&st.runAt?"Son kontrol: "+ist(st.runAt):"İlk kontrol bekleniyor")));
+  if(S.gmsg){const m=el("div",{class:"tmsg "+S.gmsg.kind},S.gmsg.text);if(S.gmsg.link)m.append(" ",el("a",{href:S.gmsg.link,target:"_blank",rel:"noopener"},"Google Takvim'de aç"));box.append(m)}
+  const all=S.games.filter(g=>["steam","epic","gog"].includes(g.platform)).map(g=>Object.assign({_st:g.alindi?"alindi":gState(g)},g));
+  const cnt=k=>all.filter(g=>g._st===k).length;
+  const bar=el("div",{class:"tybar"});
+  const seg=el("div",{class:"seg",role:"group","aria-label":"Durum"});
+  for(const[k,l]of[["aktif","Şimdi ücretsiz"],["yakinda","Yakında"],["alindi","Aldıklarım"],["bitti","Bitenler"]])seg.append(el("button",{type:"button","aria-pressed":String(S.gfilt===k),onclick:()=>{S.gfilt=k;render()}},l+" ("+cnt(k)+")"));
+  const ps=el("div",{class:"seg",role:"group","aria-label":"Platform"});
+  for(const[k,l]of[["hepsi","Tümü"],["steam","Steam"],["epic","Epic"],["gog","GOG"]])ps.append(el("button",{type:"button","aria-pressed":String(S.gplat===k),onclick:()=>{S.gplat=k;render()}},l));
+  bar.append(seg,ps);box.append(bar);
+  let rows=all.filter(g=>g._st===S.gfilt&&(S.gplat==="hepsi"||pkey(g.platform)===S.gplat));
+  rows.sort((a,b)=>S.gfilt==="bitti"||S.gfilt==="alindi"?(b.end||"").localeCompare(a.end||""):S.gfilt==="yakinda"?(a.start||"").localeCompare(b.start||""):(a.end||"9").localeCompare(b.end||"9"));
+  if(S.gfilt==="bitti"||S.gfilt==="alindi")rows=rows.slice(0,30);
+  if(!rows.length)box.append(el("div",{class:"empty"},!S.loaded?"Yükleniyor…":S.gfilt==="aktif"?"Şu an listede ücretsiz oyun yok. Yeni bir oyun çıkınca burada görünür ve size bildirim gelir.":S.gfilt==="yakinda"?"Duyurulmuş yakında ücretsiz olacak oyun yok.":S.gfilt==="alindi"?"Henüz \"Aldım\" işaretlediğin oyun yok.":"Biten kampanya yok."));
+  else{
+    const grid=el("div",{class:"ggrid"});
+    for(const g of rows){
+      const card=el("div",{class:"gcard "+pkey(g.platform)+(g.kind==="deneme"?" deneme":"")+(g.alindi?" alindi":"")});
+      card.append(el("div",{class:"gtop"},el("span",{class:"gplat "+pkey(g.platform)},PLAT[g.platform]||g.platformLabel||g.platform),el("span",{class:"gkind"},KIND[g.kind]||g.kind||"Oyun"),g.alindi?el("span",{class:"gok"},"✓ Alındı"):null,g.worth?el("span",{class:"gworth"},g.worth):null));
+      card.append(el("a",{class:"gtitle",href:g.url,target:"_blank",rel:"noopener"},g.title));
+      const when=g._st==="yakinda"?"Başlangıç: "+ist(g.start)+(g.end?" · Bitiş: "+ist(g.end):""):g._st==="aktif"?(g.end?"Bitiş: "+ist(g.end)+" · ":"")+(g.end?left(g.end):"Bitiş tarihi belirtilmemiş"):"Bitti: "+(g.end?ist(g.end):"");
+      card.append(el("div",{class:"gwhen"+(g._st==="aktif"&&g.end&&Date.parse(g.end)-Date.now()<86400000?" urgent":"")},when));
+      if(g.kind==="deneme")card.append(el("div",{class:"note"},"Kalıcı değil: yalnızca kampanya süresince oynanır."));
+      if(g.note)card.append(el("div",{class:"note"},g.note));
+      const acts=el("div",{class:"gacts"});
+      if(g._st==="alindi"&&S.canWrite)acts.append(el("button",{type:"button",class:"mini rdbtn on",onclick:()=>{const x=S.games.find(y=>y._id===g._id);if(x)x.alindi=false;render();if(S.db)S.db.doc("games/"+g._id).update({alindi:false}).catch(()=>{})}},"Alındı ✓ (geri al)"));
+      if(g._st!=="bitti"&&g._st!=="alindi"){acts.append(el("a",{class:"gget",href:g.url,target:"_blank",rel:"noopener"},g._st==="aktif"?"Mağazada aç ve al":"Mağaza sayfası"));
+        if(g.calEventId&&!g.alindi){const t=el("span",{class:"mini calbtn done"},"Takvimde");t.insertAdjacentHTML("afterbegin",CAL_ICON);acts.append(t)}
+        else if(!g.alindi&&(g.end||g.start)){const b=el("button",{type:"button",class:"mini calbtn"},g._st==="yakinda"?"Başlangıcı takvime ekle":"Bitişi takvime ekle");b.insertAdjacentHTML("afterbegin",CAL_ICON);b.onclick=()=>gameToCal(g,b);acts.append(b)}
+        if(S.canWrite&&g._st==="aktif"&&g.kind!=="deneme")acts.append(el("button",{type:"button",class:"mini rdbtn"+(g.alindi?" on":""),onclick:()=>{g.alindi=!g.alindi;const x=S.games.find(y=>y._id===g._id);if(x)x.alindi=g.alindi;render();if(S.db)S.db.doc("games/"+g._id).update({alindi:g.alindi}).catch(()=>{})}},g.alindi?"Alındı ✓ (geri al)":"Aldım"));}
+      card.append(acts);grid.append(card);
+    }
+    box.append(grid);
+  }
+  const c=oyCfg();
+  const pan=el("div",{class:"panel"},el("h2",{},"Bildirim ayarları"));
+  const chips=el("div",{class:"tools"});
+  const tg=(label,val,fn)=>{const i=el("input",{type:"checkbox"});i.checked=!!val;i.disabled=!S.canWrite;i.onchange=()=>fn(i.checked);return el("label",{class:"chk"},i," "+label)};
+  for(const[k,l]of[["steam","Steam"],["epic","Epic Games"],["gog","GOG"]])chips.append(tg(l,c.notify[k],v=>{const n=oyCfg();n.notify[k]=v;saveOyCfg(n)}));
+  pan.append(chips);
+  const ch2=el("div",{class:"tools"});
+  ch2.append(tg("DLC / eklentiler için de bildir",c.dlc,v=>{const n=oyCfg();n.dlc=v;saveOyCfg(n)}));
+  ch2.append(tg("Ücretsiz hafta sonları için de bildir",c.deneme,v=>{const n=oyCfg();n.deneme=v;saveOyCfg(n)}));
+  ch2.append(tg("E-posta da gönder",c.email,v=>{const n=oyCfg();n.email=v;saveOyCfg(n)}));
+  pan.append(ch2);
+  pan.append(el("p",{class:"note"},"Yeni ücretsiz oyun bulununca Google Takviminize bitiş saatine \"🎮 Ücretsiz al\" etkinliği bir kez eklenir (ek hatırlatma yok). Oyunu alınca burada \"Aldım\"a basın ya da takvimdeki etkinliği silin; sonraki kontrolde etkinlik \"✅ Alındı\" olur ve hatırlatmalar kapanır. Günde 4 kez (09, 13, 19, 22) kontrol edilir: yalnızca Epic Games, Steam ve GOG. \"Aldım\" dediğin oyunlar listeden çıkar, \"Aldıklarım\"da durur. Yeni kalıcı ücretsiz oyun çıkınca bir kez telefon bildirimi gider; e-posta yalnızca yukarıdaki kutu işaretliyse gönderilir."));
+  box.append(pan);
+}
+
+S.wfilt="izle";S.watchStatus=null;S.watchLoaded=false;
+function setWatch(v,patch){
+  Object.assign(v,patch);render();
+  if(S.db)S.db.doc("watch/"+v._id).update(patch).catch(e=>{if(e&&e.code==="invalid_argument"){S.canWrite=false;render()}});
+}
+function renderIzle(){
+  const box=$("izleView");box.textContent="";
+  const st=S.watchStatus;
+  box.append(el("div",{class:"tyhead"},el("h2",{},"İzlenmesi Gerekenler"),el("span",{class:"sub"},st&&st.runAt?"Son kontrol: "+ist(st.runAt):"İlk kontrol bekleniyor")));
+  if(st&&st.ok===false)box.append(el("div",{class:"tmsg err"},"Son kontrolde kaynaklar okunamadı: "+(st.note||"bilinmeyen hata")));
+  const cnt=a=>S.watch.filter(v=>!!v.archived===a).length;
+  const seg=el("div",{class:"seg",role:"group","aria-label":"Liste"});
+  for(const[k,l,a]of[["izle","İzlenecek",false],["arsiv","Arşiv",true]])seg.append(el("button",{type:"button","aria-pressed":String(S.wfilt===k),onclick:()=>{S.wfilt=k;render()}},l+" ("+cnt(a)+")"));
+  box.append(el("div",{class:"tybar"},seg));
+  const arch=S.wfilt==="arsiv";
+  const rows=S.watch.filter(v=>!!v.archived===arch).sort((a,b)=>(b.published||b.seen||"").localeCompare(a.published||a.seen||""));
+  if(!rows.length)box.append(el("div",{class:"empty"},!S.watchLoaded?"Yükleniyor…":arch?"Arşivde video yok.":"İzlenecek video yok. Coin Mühendisi yeni video atınca burada görünür ve telefonunuza bildirim gelir."));
+  else{
+    const ul=el("ul",{class:"list"});
+    for(const v of rows){
+      const d=(v.published||v.seen||"").slice(0,10);
+      const acts=el("div",{class:"acts"},el("a",{class:"gget",href:v.url,target:"_blank",rel:"noopener"},"İzle"));
+      if(S.canWrite)acts.append(el("button",{type:"button",class:"mini arbtn"+(v.archived?" on":""),onclick:()=>setWatch(v,{archived:!v.archived,archivedAt:v.archived?null:new Date().toISOString()})},v.archived?"Arşivden çıkar":"Arşivle"));
+      const meta=el("div",{class:"meta"},el("span",{class:"src"},v.channel||"Kanal"),acts);
+      ul.append(el("li",{class:"row"},el("div",{class:"d"},d?fmt(d):""),el("div",{class:"b"},el("a",{class:"t",href:v.url,target:"_blank",rel:"noopener"},v.title),v.note?el("p",{class:"note"},v.note):null,meta)));
+    }
+    box.append(ul);
+  }
+  box.append(el("p",{class:"note"},"Takip edilen kanal: Coin Mühendisi. Günde 6 kez (09–24 arası, yaklaşık 3 saatte bir) kontrol edilir; yeni videoda bir kez telefon bildirimi gelir. İzleyince Arşivle'ye basın, video bu listeden çıkar."));
+}
+
+const OSYM=[
+  {id:"yds-2026-2",ex:"YDS",name:"2026-YDS/2",date:"2026-11-22",sonuc:"2026-12-10"},
+  {id:"ales-2026-3",ex:"ALES",name:"2026-ALES/3",date:"2026-11-29",time:"10:15",sonuc:"2026-12-17"},
+  {id:"msu-2027",ex:"MSÜ",name:"2027-MSÜ",date:"2027-03-20",basvuru:"13 Oca – 10 Şub 2027",sonuc:"2027-04-15"},
+  {id:"yds-2027-1",ex:"YDS",name:"2027-YDS/1",date:"2027-03-28",basvuru:"3–11 Şub 2027",sonuc:"2027-04-21"},
+  {id:"ales-2027-1",ex:"ALES",name:"2027-ALES/1",date:"2027-04-18",basvuru:"24 Şub – 4 Mar 2027",sonuc:"2027-05-07"},
+  {id:"yks-2027",ex:"YKS (TYT)",name:"2027-YKS 1. Oturum (TYT)",date:"2027-06-19",basvuru:"4 Şub – 2 Mar 2027",sonuc:"2027-07-21"},
+  {id:"ales-2027-2",ex:"ALES",name:"2027-ALES/2",date:"2027-07-11",basvuru:"25 May – 2 Haz 2027",sonuc:"2027-07-30"},
+  {id:"dgs-2027",ex:"DGS",name:"2027-DGS",date:"2027-07-18",basvuru:"26 May – 3 Haz 2027",sonuc:"2027-08-12"},
+  {id:"kpss-lisans-2027",ex:"KPSS Lisans",name:"2027-KPSS Lisans (A Grubu) GY-GK",date:"2027-09-12",basvuru:"8–19 Tem 2027",sonuc:"2027-10-13"},
+  {id:"kpss-alan-2027",ex:"KPSS Lisans",name:"2027-KPSS Alan Bilgisi",date:"2027-09-18",end:"2027-09-19",sonuc:"2027-10-13"},
+  {id:"yds-2027-2",ex:"YDS",name:"2027-YDS/2",date:"2027-11-21",basvuru:"5–13 Eki 2027",sonuc:"2027-12-10"},
+  {id:"ales-2027-3",ex:"ALES",name:"2027-ALES/3",date:"2027-11-28",basvuru:"12–20 Eki 2027",sonuc:"2027-12-17"},
+  {id:"kpss-onlisans-2028",ex:"KPSS Ön Lisans",name:"2028-KPSS Ön Lisans",date:"2028-10-01",est:true,note:"2027'de yapılmıyor (iki yılda bir, çift yıllarda). 2026'da 4 Ekim'deydi; kesin tarih ÖSYM'nin 2028 takviminde (Ekim 2027 civarı) çıkar."},
+  {id:"kpss-ortaogretim-2028",ex:"KPSS Ortaöğretim",name:"2028-KPSS Ortaöğretim",date:"2028-10-22",est:true,note:"2027'de yapılmıyor (iki yılda bir, çift yıllarda). 2026'da 25 Ekim'deydi; kesin tarih ÖSYM'nin 2028 takviminde çıkar."}
+];
+const OSYM_EXAMS=["KPSS Ortaöğretim","KPSS Lisans","KPSS Ön Lisans","YKS (TYT)","MSÜ","DGS","ALES","YDS"];
+S.osymAr={};S.ofilt="aktif";S.osymTop=true;
+try{if(localStorage.getItem("osymTop")==="0")S.osymTop=false}catch(_){}
+function oDays(k){return Math.round((Date.parse(k+"T00:00:00Z")-Date.parse(iso(today())+"T00:00:00Z"))/864e5)}
+function oLast(o){return o.end||o.date}
+function oUp(){return OSYM.filter(o=>oDays(oLast(o))>=0).sort((a,b)=>a.date.localeCompare(b.date))}
+function osymSoon(){return oUp().filter(o=>!S.osymAr[o.id]&&oDays(o.date)<=10)}
+function oWhen(o){return o.end?fmtLong(o.date)+" – "+fmtLong(o.end):fmtLong(o.date)+(o.time?" "+o.time:"")}
+function oLeft(o){const d=oDays(o.date);return d>0?d+" gün kaldı":d===0?"Bugün":"Sürüyor"}
+let osymSaving=Promise.resolve();
+function osymArch(o){
+  const n=Object.assign({},S.osymAr);if(n[o.id])delete n[o.id];else n[o.id]=new Date().toISOString().slice(0,10);
+  S.osymAr=n;render();
+  if(S.db)osymSaving=osymSaving.then(()=>S.db.doc("osym/arsiv").set(n)).catch(e=>{if(e&&e.code==="invalid_argument"){S.canWrite=false;render()}});
+}
+function oArBtn(o){if(!S.canWrite||!S.db)return null;const on=!!S.osymAr[o.id];return el("button",{type:"button",class:"mini arbtn"+(on?" on":""),onclick:()=>osymArch(o)},on?"Arşivden çıkar":"Arşivle")}
+function oCalBtn(o){
+  if(o.est)return null;
+  if(S.osymCal&&S.osymCal[o.id]){const t=el("span",{class:"mini calbtn done",title:"15 gün kala otomatik eklendi"},"Takvimde");t.insertAdjacentHTML("afterbegin",CAL_ICON);return t}
+  const title="ÖSYM: "+o.name+(o.end?" (2 gün)":"");
+  const a=el("a",{class:"mini calbtn",href:gcalLink({title,url:"https://gis.osym.gov.tr/"},o.name+" · "+oWhen(o),o.date,o.time||""),target:"_blank",rel:"noopener"},"Takvime ekle");
+  a.insertAdjacentHTML("afterbegin",CAL_ICON);return a;
+}
+function renderOsym(){
+  const box=$("osymView");box.textContent="";
+  box.append(el("div",{class:"tyhead"},el("h2",{},"ÖSYM Takvim"),el("span",{class:"sub"},"Bugün: "+fmtLong(iso(today())))));
+  const up=oUp(),ac=up.filter(o=>!S.osymAr[o.id]),ar=OSYM.filter(o=>S.osymAr[o.id]);
+  const seg=el("div",{class:"seg",role:"group","aria-label":"Liste"});
+  for(const[k,l,n]of[["aktif","Aktif",ac.length],["arsiv","Arşiv",ar.length]])seg.append(el("button",{type:"button","aria-pressed":String(S.ofilt===k),onclick:()=>{S.ofilt=k;render()}},l+" ("+n+")"));
+  box.append(el("div",{class:"tybar"},seg,el("span",{class:"note"},"Takip: "+OSYM_EXAMS.join(" · "))));
+  const tgi=el("input",{type:"checkbox"});tgi.checked=S.osymTop;
+  tgi.onchange=()=>{S.osymTop=tgi.checked;try{localStorage.setItem("osymTop",S.osymTop?"1":"0")}catch(_){}render()};
+  box.append(el("div",{class:"panel"},el("h2",{},"Bildirim ayarı"),el("label",{class:"chk"},tgi," Sınava 15 gün kala sağ üstte önemli uyarı göster (tüm sekmelerde)"),el("p",{class:"note"},"Uyarı, sınav arşivlenene ya da sınav günü geçene kadar sayfanın sağ üst köşesinde kalır. Uyarıya dokununca ÖSYM Takvim sekmesi açılır.")));
+  if(S.ofilt==="arsiv"){
+    if(!ar.length){box.append(el("div",{class:"empty"},"Arşivde sınav yok."));return}
+    const ul=el("ul",{class:"upc"});
+    for(const o of ar)ul.append(el("li",{},el("span",{class:"ud"},oWhen(o)),el("span",{class:"ub"},el("b",{},o.name),el("span",{class:"un"},"Arşive alındı: "+fmtLong(S.osymAr[o.id]))),el("span",{class:"acts"},oArBtn(o))));
+    box.append(ul);return;
+  }
+  const soon=osymSoon();
+  box.append(el("h2",{class:"tysec"},"Sınava 10 gün kalanlar"));
+  if(soon.length){
+    const ul=el("ul",{class:"list"});
+    for(const o of soon){
+      const meta=el("div",{class:"meta"},el("span",{class:"flag"},oLeft(o)),el("span",{class:"src"},o.ex),
+        el("div",{class:"acts"},el("a",{class:"gget",href:"https://gis.osym.gov.tr/",target:"_blank",rel:"noopener"},"GİS'te görev durumuna bak"),oCalBtn(o),oArBtn(o)));
+      ul.append(el("li",{class:"row prio"},el("div",{class:"d"},fmt(o.date)),el("div",{class:"b"},el("span",{class:"t",style:"font-weight:600"},o.name+(o.time?" · "+o.time:"")),meta)));
+    }
+    box.append(ul);
+  }else{
+    const nx=ac[0];
+    box.append(el("div",{class:"empty"},"Şu an 10 gün içinde takip ettiğin bir sınav yok."+(nx?" En yakını: "+nx.name+", "+fmtLong(nx.date)+" ("+oDays(nx.date)+" gün).":"")));
+  }
+  box.append(el("h2",{class:"tysec"},"Takvim"));
+  if(!ac.length)box.append(el("div",{class:"empty"},"Takvimde yaklaşan sınav kalmadı."));
+  else{
+    const tb=el("tbody");
+    for(const o of ac){
+      const d=oDays(o.date),hot=d<=10;
+      tb.append(el("tr",{class:hot?"next":""},
+        el("td",{class:"dt"},oWhen(o)),
+        el("td",{},el("b",{},o.name),o.est?el("span",{class:"dst beklenen",style:"margin-left:6px"},"Tahmini"):null,
+          el("div",{class:"note"},[o.basvuru?"Aday başvurusu: "+o.basvuru:"",o.sonuc?"Sonuç: "+fmtLong(o.sonuc):"",o.note||""].filter(Boolean).join(" · "))),
+        el("td",{class:"dt"},el("span",{class:hot?"kw":"st na"},d>0?d+" gün":"bugün")),
+        el("td",{class:"ac"},el("span",{class:"acts"},oCalBtn(o),oArBtn(o)))));
+    }
+    box.append(el("div",{class:"tswrap"},el("table",{class:"ts"},tb)));
+  }
+  box.append(el("p",{class:"note"},"Görevli başvuru durumu otomatik okunamıyor: ÖSYM Görevli İşlemleri Sistemi (GİS) yalnızca e-Devlet/şifre girişiyle açılıyor ve herkese açık bir duyuru listesi yok. Bu yüzden sınava 10 gün kalan oturumlar turuncu olarak üstte listelenir; görev talebini GİS'ten kontrol et. Tarihler ÖSYM 2026 ve 2027 sınav takvimlerinden alındı; \"Tahmini\" olanlar önceki dönemlere göre yazıldı. Sınav günü geçen oturumlar listeden kendiliğinden düşer. Sınava 15 gün kalınca sınav her Pazartesi 08:37'deki haftalık kontrolle Google Takviminize kendiliğinden eklenir (bir gün önce hatırlatma) ve telefonunuza bildirim gelir; tahmini tarihler eklenmez."));
+  box.append(el("div",{class:"tylinks"},el("a",{href:"https://gis.osym.gov.tr/",target:"_blank",rel:"noopener"},"ÖSYM GİS"),el("a",{href:"https://www.osym.gov.tr/",target:"_blank",rel:"noopener"},"ÖSYM sınav takvimi")));
+}
+
+function renderSub(){
+  const nav=$("subnav"),g=GROUPS[S.tab];nav.textContent="";nav.hidden=!g;if(!g)return;
+  for(const x of g)nav.append(el("button",{type:"button",role:"tab",class:"stab","aria-selected":String(dtab()===x.id),onclick:()=>{location.hash=S.tab+"/"+x.id}},x.label));
+}
+function route(){
+  let[h,sub]=decodeURIComponent(location.hash.slice(1)).split("/");
+  const u=uiTab(h);if(u!==h){sub=h;h=u}
+  S.tab=TABS.some(t=>t.id===h)?h:"spor";
+  if(GROUPS[S.tab]&&GROUPS[S.tab].some(x=>x.id===sub))S.sub[S.tab]=sub;
+  render();
+}
+window.addEventListener("hashchange",route);
+route();
+
+(async()=>{
+  if(window.claude&&window.claude.use)window.claude.use("mcp").then(m=>{S.mcp=m;render()}).catch(()=>{});
+  const db=await (window.claude&&window.claude.use?window.claude.use("db"):Promise.resolve(null));
+  if(!db){S.db=false;render();return}
+  S.db=db;
+  try{const u=await window.claude.use("user");if(u){const c=await u.can("data.write");if(c===false)S.canWrite=false}}catch(_){}
+  db.collection("items").limit(1000).onSnapshot(snap=>{S.items=snap.docs.map(d=>Object.assign({_id:d.id},d.data()));S.loaded=true;render()},()=>{S.loaded=true;render()});
+  db.doc("config/keywords").onSnapshot(s=>{S.kw=s.exists?s.data():null;render()});
+  db.doc("status/last").onSnapshot(s=>{S.status=s.exists?s.data():null;onStatus(S.status);render()});
+  db.doc("status/tabs").onSnapshot(s=>{S.tabRuns=s.exists?s.data():null;render()},()=>{});
+  db.doc("tayin/current").onSnapshot(s=>{S.tayin=s.exists?s.data():null;render()},()=>{});
+  db.collection("tayinHist").limit(100).onSnapshot(snap=>{S.tayinHist=snap.docs.map(d=>Object.assign({_id:d.id},d.data()));render()},()=>{});
+  db.collection("tayinDonem").limit(200).onSnapshot(snap=>{S.tayinDonem=snap.docs.map(d=>Object.assign({_id:d.id},d.data()));render()},()=>{});
+  db.doc("tayin/cal").onSnapshot(s=>{S.tayinCal=s.exists?Object.assign({},s.data()):{};render()},()=>{});
+  db.collection("games").limit(300).onSnapshot(snap=>{S.games=snap.docs.map(d=>Object.assign({_id:d.id},d.data()));render()},()=>{});
+  db.doc("oyun/config").onSnapshot(s=>{S.oyunCfg=s.exists?s.data():null;render()},()=>{});
+  db.doc("oyun/status").onSnapshot(s=>{S.oyunStatus=s.exists?s.data():null;render()},()=>{});
+  db.collection("watch").limit(300).onSnapshot(snap=>{S.watch=snap.docs.map(d=>Object.assign({_id:d.id},d.data()));S.watchLoaded=true;render()},()=>{S.watchLoaded=true;render()});
+  db.doc("izle/status").onSnapshot(s=>{S.watchStatus=s.exists?s.data():null;render()},()=>{});
+  db.doc("tayin/takvimMeta").onSnapshot(s=>{S.tayinMeta=s.exists?s.data():null;render()},()=>{});
+  db.doc("osym/cal").onSnapshot(s=>{S.osymCal=s.exists?Object.assign({},s.data()):{};render()},()=>{});
+  db.doc("osym/arsiv").onSnapshot(s=>{S.osymAr=s.exists?Object.assign({},s.data()):{};render()},()=>{});
+})();
+</script>
+
+</body></html>
